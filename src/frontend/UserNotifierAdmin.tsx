@@ -112,7 +112,7 @@ const UserNotifierAdmin = () => {
         {errors["description"] && (<ErrorMessage>Please enter a message description</ErrorMessage>)}
       </FormSection>
       <FormSection>
-        <Label labelFor={getFieldId('issueIdsOrKeysCsv')}>Issue keys or IDs</Label>
+        <Label labelFor={getFieldId('issueIdsOrKeysCsv')}>Issue keys or IDs (CSV)</Label>
         <Textfield {...register("issueIdsOrKeysCsv", { required: false })} placeholder='ABC-123, DEV-456' />
       </FormSection>
       <FormFooter>
