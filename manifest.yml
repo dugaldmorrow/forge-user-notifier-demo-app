@@ -1,0 +1,73 @@
+modules:
+  webtrigger:
+    - key: new-user-message
+      function: fn-new-user-message
+      response:
+        type: static
+        outputs:
+          - key: status-submitted
+            statusCode: 201
+            contentType: application/json
+            body: '{"body": "User message submitted successfully"}'
+          - key: status-bad-request
+            statusCode: 400
+            contentType: text/plain
+            body: 'Error: Bad Request'
+          - key: status-unauthorized
+            statusCode: 401
+            contentType: text/plain
+            body: 'Error: Unauthorized'
+  jira:adminPage:
+    - key: admin-page
+      resource: admin
+      resolver:
+        function: fn-resolver
+      render: native
+      title: Send User Message
+  jira:issueViewBackgroundScript:
+    - key: issue-view-background-script
+      resource: notifier
+      resolver:
+        function: fn-resolver
+      render: native
+  jira:dashboardBackgroundScript:
+    - key: dashboard-background-script
+      resource: notifier
+      resolver:
+        function: fn-resolver
+      render: native
+  function:
+    - key: fn-resolver
+      handler: index.handler
+    - key: fn-new-user-message
+      handler: index.newUserMessage
+resources:
+  - key: admin
+    path: src/frontend/UserNotifierAdmin.tsx
+  - key: notifier
+    path: src/frontend/UserNotifier.tsx
+
+app:
+  runtime:
+    name: nodejs22.x
+  id: ari:cloud:ecosystem::app/0ed810f2-0aef-4ac9-9b5a-cdcabdc9ab53
+  storage:
+    entities:
+      - name: user-message
+        attributes:
+          accountId:
+            type: string
+          type:
+            type: string
+          title:
+            type: string
+          description:
+            type: string
+        indexes:
+          - accountId
+
+permissions:
+  scopes:
+    - storage:app
+    - read:jira-work
+    - write:jira-work
