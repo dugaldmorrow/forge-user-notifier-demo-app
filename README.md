@@ -83,15 +83,16 @@ This app uses the following modules:
 
 The user messages are stored as [custom entities](https://developer.atlassian.com/platform/forge/storage-reference/storage-api-custom-entities/).
 
-## Tailoring the app
+## How dynamic user notifications work
 
-The app updates the desciption field of the issue. 
+When a user notification relates to a specific issue, the notification instructions can include the issue key or ID which will then result in the issue being updated by the user associated with the app. The frontend logic subscribes to `JIRA_ISSUE_CHANGED` which results in the user being notified without them having to perform any actions so long as they are already viewing the issue.
 
-## Potential enhancements
+## Tailoring and enhancing the app
 
+* The synamic user notifications feature requires an un issue update to trigger the `JIRA_ISSUE_CHANGED` event. The app simply updates the desciption field of the issue, but a production app would likely want to update another issue field. A custom issue field could be employed for this. 
 * Support alternate forms of notifications such as dialoigs.
 * Support the ability to set message expiry times.
-8 Support the ability to broadcast to all users or all users within a specific group.
+* Support the ability to broadcast to all users or all users within a specific group.
 
 ## Requirements
 
