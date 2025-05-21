@@ -75,10 +75,11 @@ curl --header "X-mywebtriggerkey: foo" --header "X-accountId: 557057:7065aba1-f7
 
 ## Architecture
 
-Forge Toaster uses three modules: 
+This app uses the following modules: 
 
-- an [`adminPage`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-admin-page/) used to create new messages; and
+- an [`adminPage`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-admin-page/) is used to create new messages; and
 - an [`issueViewBackgroundScript`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-issue-view-background-script/) and a [`dasboardBackgroundScript`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/jira-dashboard-background-script/) that checks for pending messages and displays them to the user
+- a [`webtrigger`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/web-trigger/) is used to allow message notification instructions to be issued from an external system.
 
 The user messages are stored as [custom entities](https://developer.atlassian.com/platform/forge/storage-reference/storage-api-custom-entities/).
 
