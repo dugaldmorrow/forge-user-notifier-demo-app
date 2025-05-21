@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ForgeReconciler from '@forge/react';
-import { invoke, showFlag } from '@forge/bridge';
+import { FlagOptions, invoke, showFlag } from '@forge/bridge';
 import { UserMessage } from 'src/types/UserMessage';
 import { events } from "@forge/bridge";
 
@@ -14,26 +14,28 @@ export const UserNotifier = () => {
       showMyUserMessages();
     });      
   }
-  
-  const showUserMessage = async (id, type, title, description) => {
-    const flag = showFlag({ 
-      id, type, title, description,
-      actions: [
-        {
-          text: 'Acknowledge',
-          onClick: async () => {
-            invoke('clearUserMessage', { userMessageId: id });
-            flag.close();
-          },
-        }
-      ],
-    });
+
+  const showUserMessage = async (userMessage: UserMessage) => {
+    const options: FlagOptions = {
+      id: userMessage.id,
+      type: userMessage.type,
+      title: userMessage.title,
+      description: userMessage.description,
+      actions: [{
+        text: 'Acknowledge',
+        onClick: async () => {
+          invoke('clearUserMessage', { userMessageId: userMessage.id });
+          flag.close();
+        },
+      }]
+    }
+    const flag = showFlag(options);
   }
 
   const showMyUserMessages = async () => {
     const userMessages = (await invoke('fetchMyUserMessages')) as UserMessage[];
     userMessages.forEach((userMessage: UserMessage) => {
-      showUserMessage(userMessage.id, userMessage.type, userMessage.title, userMessage.description);
+      showUserMessage(userMessage);
     });
   }
 
