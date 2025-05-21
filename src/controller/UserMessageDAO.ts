@@ -4,21 +4,26 @@ import { UserMessageEntity } from '../types/UserMessageEntity';
 import { UserMessage } from 'src/types/UserMessage';
 import { isUserAdmin } from './isUserAdmin';
 
+// This must match the entity name in the manifest
+const userMessageEntityId = 'user-message';
+
 export const saveUserMessage = async (userMessage: UserMessageEntity): Promise<void> => {
   console.log(`Saving userMessage to ${userMessage.accountId} of type ${userMessage.type} with title ${userMessage.title} and description ${userMessage.description}`);
   const uuid = crypto.randomUUID();
-  await storage.entity("user-message").set(uuid, userMessage);
+  await storage.entity(userMessageEntityId)
+    .set(uuid, userMessage);
 }
 
 export const clearUserMessage = async (userMessageId: string, accountId: string): Promise<void> => {
   const userMessage = await storage
-    .entity("user-message")
+    .entity(userMessageEntityId)
     .get(userMessageId) as undefined | UserMessageEntity;
 
   if (userMessage) {
     // only the user viewing the userMessage or an admin can clear it
     if (userMessage.accountId === accountId || await isUserAdmin()) {
-      await storage.entity("user-message").delete(userMessageId);
+      await storage.entity(userMessageEntityId)
+        .delete(userMessageId);
     } else {
       console.error(`Account ${accountId} is not authorized to clear userMessage ${userMessageId} - it belongs to ${userMessage.accountId}`);
     }
@@ -29,7 +34,7 @@ export const clearUserMessage = async (userMessageId: string, accountId: string)
 
 export const getMessagesForUser = async (accountId: string, maxResults: number = 10): Promise<UserMessage[]> => {
   const query = await storage
-    .entity("user-message")
+    .entity(userMessageEntityId)
     .query()
     .index("accountId")
     .where(WhereConditions.equalsTo(accountId))
